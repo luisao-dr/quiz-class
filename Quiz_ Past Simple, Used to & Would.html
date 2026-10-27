@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz: Past Simple, Used to & Would</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ec;--card:#fffdf8;--ink:#1f2a44;--mute:#5b6275;--line:#e0dacb;--acc:#c2410c;--ok:#0f766e;--okbg:#d9f0ec;--bad:#b91c1c;--badbg:#fbe0dd;--btn:#1f2a44;--btnink:#f6f3ec;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a2b;--card:#1d2540;--ink:#f1ede3;--mute:#aab2c5;--line:#323c5c;--acc:#f4a261;--ok:#5fd3c4;--okbg:#173c3a;--bad:#ff8f86;--badbg:#4a2326;--btn:#f4a261;--btnink:#141a2b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141a2b;--card:#1d2540;--ink:#f1ede3;--mute:#aab2c5;--line:#323c5c;--acc:#f4a261;--ok:#5fd3c4;--okbg:#173c3a;--bad:#ff8f86;--badbg:#4a2326;--btn:#f4a261;--btnink:#141a2b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Poppins',system-ui,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:32px 20px 56px}
+.tag{font-weight:600;color:var(--acc);font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:0}
+h1{font-size:clamp(28px,6vw,40px);line-height:1.15;margin:6px 0 8px}
+.sub{color:var(--mute);margin:0 0 24px}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 6px}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+.meta{display:flex;justify-content:space-between;color:var(--mute);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-top:20px}
+.q{font-size:clamp(19px,4.5vw,24px);font-weight:600;margin:0 0 18px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;width:100%;font:inherit;font-size:17px;color:var(--ink);background:transparent;border:2px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt b{flex:none;width:30px;height:30px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:14px}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.opt:disabled{cursor:default}
+.fb{margin-top:16px;padding:14px 16px;border-radius:12px;font-size:16px}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.btn{margin-top:18px;font:inherit;font-weight:600;font-size:17px;background:var(--btn);color:var(--btnink);border:0;border-radius:12px;padding:14px 26px;cursor:pointer}
+.score{font-size:64px;font-weight:700;color:var(--acc);margin:0}
+.rev{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.rev li{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px}
+.rev small{color:var(--mute);display:block}
+.typ{display:flex;gap:10px;flex-wrap:wrap}
+.typ input{flex:1;min-width:200px;font:inherit;font-size:18px;padding:14px 16px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+.typ input.ok{border-color:var(--ok);background:var(--okbg)}
+.typ input.bad{border-color:var(--bad);background:var(--badbg)}
+.typ .btn{margin-top:0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<main>
+<p class="tag">2º Bachillerato · English verb tenses</p>
+<h1>Quiz: Past Simple, Used to &amp; Would</h1>
+<p class="sub">12 questions: 10 multiple choice and 4 where you type the answer with your keyboard.</p>
+<div id="top">
+<div class="bar"><i id="fill"></i></div>
+<div class="meta"><span id="prog">Question 1 of 10</span><span id="sc">Score: 0</span></div>
+</div>
+<div class="card" id="quiz">
+<p class="q" id="q"></p>
+<div class="opts" id="opts"></div>
+<div class="typ hidden" id="typ"><input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer…"><button class="btn" id="chk">Check</button></div>
+<div id="fb" class="fb hidden"></div>
+<button class="btn hidden" id="next">Next question</button>
+</div>
+<div class="card hidden" id="res">
+<p class="tag">Your result</p>
+<p class="score" id="final"></p>
+<p id="msg" style="margin:4px 0 18px"></p>
+<ul class="rev" id="rev"></ul>
+<button class="btn" id="again">Try again</button>
+</div>
+</main>
+<script>
+var Q=[
+{q:"Yesterday I ___ my grandparents.",o:["visit","visited","used to visit","would visit"],a:1,e:"A single finished action at a specific time (yesterday) needs the Past Simple."},
+{q:"She ___ to the party last night.",o:["didn’t went","not go","didn’t go","wouldn’t went"],a:2,e:"Negative Past Simple: didn’t + base verb."},
+{q:"___ you use to live in Madrid when you were a child?",o:["Do","Were","Would","Did"],a:3,e:"Questions with used to are formed with Did + subject + use to + base verb."},
+{q:"When I was young, I ___ a lot of comic books.",o:["was used to read","use to read","used to read","would to read"],a:2,e:"Used to + base verb describes past habits that no longer happen."},
+{q:"He ___ like spicy food, but now he loves it.",o:["didn’t use to","didn’t used to","wouldn’t","isn’t used to"],a:0,e:"With did/didn’t we write use to (no -d). Would can’t be used for states like like."},
+{q:"Which sentence is correct?",o:["I would be shy as a child.","I would being shy as a child.","I was use to be shy.","I used to be shy as a child."],a:3,e:"Would is not used for past states (be, have, like, know). Use used to."},
+{q:"Every summer, we ___ to my aunt’s house by the sea.",o:["are going","would go","have gone","would went"],a:1,e:"Would + base verb describes repeated past actions, once the past time is clear."},
+{q:"Which sentence talks about ONE finished action?",o:["We would travel every year.","We travelled to Rome last May.","We used to travel every year.","We would often travel to Rome."],a:1,e:"Only the Past Simple describes a single finished action. The others are habits."},
+{q:"“I’m used to getting up early” means...",o:["I did it in the past but not now.","I will do it tomorrow.","I am accustomed to it.","I would like to do it."],a:2,e:"Be used to + -ing means being accustomed to something. It is different from used to + verb."},
+{q:"Choose the correct Past Simple forms of buy, write and go.",o:["bought, wrote, went","buyed, wrote, went","bought, writed, went","bought, wrote, goed"],a:0,e:"These three verbs are irregular: buy-bought, write-wrote, go-went."},
+{q:"Last weekend we ___ (see) a great concert.",t:1,ans:["saw"],disp:"saw",e:"See is irregular: see-saw-seen."},
+{q:"He ___ (not / eat) breakfast this morning.",t:1,ans:["didn't eat","did not eat"],disp:"didn’t eat",e:"Negative Past Simple: didn’t + base verb (not “ate”)."},
+{q:"When I was a child, every Sunday we ___ (visit) my grandma.",t:1,ans:["would visit","'d visit","used to visit","visited"],disp:"would visit / used to visit",e:"A repeated past action can use would + base verb or used to + base verb (also Past Simple)."},
+{q:"I ___ (live) in a village, but now I live in a city.",t:1,ans:["used to live","lived"],disp:"used to live",e:"Used to + base verb contrasts a past state with the present (would can’t be used for states)."}
+];
+var i=0,score=0,wrong=[],done=false;
+var $=function(id){return document.getElementById(id)};
+function show(){
+  var c=Q[i];done=false;
+  $("q").textContent=(i+1)+". "+c.q;
+  $("prog").textContent="Question "+(i+1)+" of "+Q.length;
+  $("sc").textContent="Score: "+score;
+  $("fill").style.width=(i/Q.length*100)+"%";
+  $("fb").className="fb hidden";$("next").className="btn hidden";
+  var box=$("opts");box.innerHTML="";
+  $("typ").className=c.t?"typ":"typ hidden";
+  if(c.t){$("ans").value="";$("ans").className="";$("ans").disabled=false;$("chk").disabled=false;setTimeout(function(){$("ans").focus()},50)}
+  (c.o||[]).forEach(function(t,k){
+    var b=document.createElement("button");b.className="opt";
+    b.innerHTML="<b>"+"ABCD"[k]+"</b><span></span>";b.lastChild.textContent=t;
+    b.onclick=function(){pick(k)};box.appendChild(b);
+  });
+}
+function pick(k){
+  if(done)return;done=true;
+  var c=Q[i],bs=$("opts").children;
+  for(var j=0;j<bs.length;j++){bs[j].disabled=true;if(j===c.a)bs[j].classList.add("ok")}
+  var good=k===c.a;
+  if(good){score++}else{bs[k].classList.add("bad");wrong.push({q:c.q,y:c.o[k],r:c.o[c.a],e:c.e})}
+  $("sc").textContent="Score: "+score;
+  var fb=$("fb");fb.className="fb "+(good?"ok":"bad");
+  fb.textContent=(good?"Correct! ":"Not quite. ")+c.e;
+  $("next").textContent=i===Q.length-1?"See results":"Next question";
+  $("next").className="btn";
+}
+function norm(s){return s.toLowerCase().replace(/[’‘`]/g,"'").replace(/\s+/g," ").trim()}
+function check(){
+  if(done)return;var v=norm($("ans").value);if(!v)return;done=true;
+  var c=Q[i];var good=c.ans.some(function(x){return norm(x)===v});
+  $("ans").disabled=true;$("chk").disabled=true;$("ans").className=good?"ok":"bad";
+  if(good){score++}else{wrong.push({q:c.q,y:$("ans").value.trim(),r:c.disp,e:c.e})}
+  $("sc").textContent="Score: "+score;
+  var fb=$("fb");fb.className="fb "+(good?"ok":"bad");
+  fb.textContent=(good?"Correct! ":"Not quite. Correct answer: "+c.disp+". ")+c.e;
+  $("next").textContent=i===Q.length-1?"See results":"Next question";
+  $("next").className="btn";
+}
+$("chk").onclick=check;
+$("ans").onkeydown=function(e){if(e.key==="Enter")check()};
+$("next").onclick=function(){i++;if(i<Q.length){show()}else{finish()}};
+function finish(){
+  $("quiz").className="card hidden";$("top").className="hidden";$("res").className="card";
+  $("final").textContent=score+" / "+Q.length;
+  $("msg").textContent=score>=9?"Excellent! You really know these tenses.":score>=7?"Very good! Review the mistakes below.":score>=5?"Not bad. Check the explanations and try again.":"Keep practising. Read the explanations and try again.";
+  var r=$("rev");r.innerHTML="";
+  wrong.forEach(function(w){
+    var li=document.createElement("li");
+    var s=document.createElement("b");s.textContent=w.q;
+    var a=document.createElement("small");a.textContent="Your answer: "+w.y+" · Correct: "+w.r;
+    var e=document.createElement("small");e.textContent=w.e;
+    li.appendChild(s);li.appendChild(a);li.appendChild(e);r.appendChild(li);
+  });
+  if(!wrong.length){r.innerHTML="<li>No mistakes. Perfect score!</li>"}
+}
+$("again").onclick=function(){i=0;score=0;wrong=[];$("res").className="card hidden";$("quiz").className="card";$("top").className="";show()};
+show();
+</script>
+</body>
+</html>
